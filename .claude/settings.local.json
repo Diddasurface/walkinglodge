@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "PowerShell($src = \"C:\\\\Users\\\\mmich\\\\.claude\\\\projects\\\\d--TRABAJO-FREELANZER-amazon-experience\\\\1e0fe3f9-7355-4ea9-85d0-9ce88e77f7c9\\\\tool-results\\\\webfetch-1778291071635-lo3edr.bin\"; $dst = \"C:\\\\Users\\\\mmich\\\\.claude\\\\projects\\\\d--TRABAJO-FREELANZER-amazon-experience\\\\design_extracted\\\\content.html\"; New-Item -ItemType Directory -Path \\(Split-Path $dst\\) -Force | Out-Null; $inputStream = [System.IO.File]::OpenRead\\($src\\); $outputStream = [System.IO.File]::Create\\($dst\\); $gzip = New-Object System.IO.Compression.GZipStream\\($inputStream, [System.IO.Compression.CompressionMode]::Decompress\\); $gzip.CopyTo\\($outputStream\\); $gzip.Close\\(\\); $outputStream.Close\\(\\); $inputStream.Close\\(\\); \"Done, extracted to $dst\")",
+      "PowerShell($content = Get-Content \"C:\\\\Users\\\\mmich\\\\.claude\\\\projects\\\\d--TRABAJO-FREELANZER-amazon-experience\\\\design_extracted\\\\content.html\" -Raw -Encoding UTF8; $idx = $content.IndexOf\\(\"styles.css\"\\); if \\($idx -ge 0\\) { $content.Substring\\($idx, [Math]::Min\\(200, $content.Length - $idx\\)\\) })",
+      "PowerShell($content = Get-Content \"C:\\\\Users\\\\mmich\\\\.claude\\\\projects\\\\d--TRABAJO-FREELANZER-amazon-experience\\\\design_extracted\\\\content.html\" -Raw -Encoding UTF8; $marker = \"amazon-experience/project/styles.css\"; $idx = $content.IndexOf\\($marker\\); \"Found at idx: $idx\"; if \\($idx -ge 0\\) { $content.Substring\\($idx, [Math]::Min\\(300, $content.Length - $idx\\)\\) })"
+    ]
+  }
+}

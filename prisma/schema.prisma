@@ -1,0 +1,512 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// SQLite ahora · cambiar provider + DATABASE_URL para MySQL o PostgreSQL
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// USUARIOS
+// role: "ADMIN" | "CLIENT" | "PROVIDER"
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("CLIENT")
+  phone     String?
+  avatarUrl String?  @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientProfile       ClientProfile?
+  bookings            Booking[]
+  reviews             Review[]
+  createdDestinations Destination[]  @relation("DestinationCreator")
+  createdTours        Tour[]         @relation("TourCreator")
+  createdHotels       Hotel[]        @relation("HotelCreator")
+  createdGuides       Guide[]        @relation("GuideCreator")
+}
+
+// Datos extendidos solo para clientes
+model ClientProfile {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nationality      String?
+  passportNumber   String?
+  dateOfBirth      DateTime?
+  emergencyContact String?
+  medicalNotes     String?   @db.Text
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DESTINOS TURÍSTICOS
+// tag: "rio" | "bosque" | "fauna"
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Destination {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  regionEs    String
+  regionEn    String
+  nameEs      String
+  nameEn      String
+  shortEs     String
+  shortEn     String
+  subEs       String
+  subEn       String
+  descEs      String   @db.Text
+  descEn      String   @db.Text
+  coverImg    String   @db.Text
+  tag         String
+  latitude    Float?
+  longitude   Float?
+  altitudeM   Int?
+  published   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String?
+  createdBy   User?    @relation("DestinationCreator", fields: [createdById], references: [id])
+
+  experienceEs    String? @db.Text
+  experienceEn    String? @db.Text
+  durationDays    Int?
+  mapAddress      String? @db.Text
+  contactEmail    String?
+  contactWhatsapp String?
+
+  images   DestinationImage[]
+  hotels   Hotel[]
+  tours    TourDestination[]
+  reviews  Review[]
+  warnings DestinationWarning[]
+  days     DestinationDay[]
+}
+
+model DestinationWarning {
+  id            String      @id @default(cuid())
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  textEs        String      @db.Text
+  textEn        String      @db.Text
+  severity      String      @default("warning")
+  sortOrder     Int         @default(0)
+}
+
+model DestinationDay {
+  id            String      @id @default(cuid())
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  dayNumber     Int
+  titleEs       String
+  titleEn       String
+  descEs        String?     @db.Text
+  descEn        String?     @db.Text
+  mealsEs       String?     @db.Text
+  mealsEn       String?     @db.Text
+
+  @@unique([destinationId, dayNumber])
+}
+
+// type: "image" | "video"
+// provider: "youtube" | "vimeo" | "direct" (only for videos)
+model DestinationImage {
+  id            String      @id @default(cuid())
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  type          String      @default("image")
+  url           String      @db.Text
+  provider      String?
+  thumbUrl      String?     @db.Text
+  captionEs     String?     @db.Text
+  captionEn     String?     @db.Text
+  altEs         String?     @db.Text
+  altEn         String?     @db.Text
+  sortOrder     Int         @default(0)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HOTELES & HABITACIONES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Hotel {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  nameEs        String
+  nameEn        String
+  descEs        String?     @db.Text
+  descEn        String?     @db.Text
+  stars         Int
+  coverImg      String?     @db.Text
+  address       String?     @db.Text
+  phone         String?
+  email         String?
+  website       String?     @db.Text
+  checkInTime   String?
+  checkOutTime  String?
+  published     Boolean     @default(false)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id])
+  createdById   String?
+  createdBy     User?       @relation("HotelCreator", fields: [createdById], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  images        HotelImage[]
+  amenities     HotelAmenity[]
+  rooms         Room[]
+  hotelBookings BookingHotel[]
+  reviews       Review[]
+}
+
+model HotelImage {
+  id        String  @id @default(cuid())
+  hotelId   String
+  hotel     Hotel   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  url       String  @db.Text
+  altEs     String? @db.Text
+  altEn     String? @db.Text
+  sortOrder Int     @default(0)
+}
+
+model HotelAmenity {
+  id      String  @id @default(cuid())
+  hotelId String
+  hotel   Hotel   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  nameEs  String
+  nameEn  String
+  icon    String?
+}
+
+// typeEs/typeEn: "Simple" | "Doble" | "Triple" | "Suite" | "Familiar"
+model Room {
+  id        String   @id @default(cuid())
+  hotelId   String
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  typeEs    String
+  typeEn    String
+  descEs    String?  @db.Text
+  descEn    String?  @db.Text
+  capacity  Int      @default(2)
+  beds      Int      @default(1)
+  coverImg  String?  @db.Text
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  amenities     RoomAmenity[]
+  prices        RoomPrice[]
+  hotelBookings BookingHotel[]
+}
+
+model RoomAmenity {
+  id     String  @id @default(cuid())
+  roomId String
+  room   Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  nameEs String
+  nameEn String
+  icon   String?
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPORADAS & PRECIOS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Season {
+  id        String   @id @default(cuid())
+  nameEs    String
+  nameEn    String
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  roomPrices RoomPrice[]
+  tourPrices TourPrice[]
+}
+
+model RoomPrice {
+  id            String   @id @default(cuid())
+  roomId        String
+  room          Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  seasonId      String
+  season        Season   @relation(fields: [seasonId], references: [id])
+  pricePerNight Float
+  currency      String   @default("USD")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([roomId, seasonId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TOURS
+// type: "ADV" | "NAT" | "CUL" | "LUX" | "FAM"
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Tour {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  type           String
+  titleEs        String
+  titleEn        String
+  subEs          String?
+  subEn          String?
+  descEs         String?  @db.Text
+  descEn         String?  @db.Text
+  durationDays   Int
+  durationNights Int
+  levelEs        String
+  levelEn        String
+  coverImg       String   @db.Text
+  minPax         Int      @default(1)
+  maxPax         Int      @default(20)
+  published      Boolean  @default(false)
+  featured       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  createdById    String?
+  createdBy      User?    @relation("TourCreator", fields: [createdById], references: [id])
+
+  destinations TourDestination[]
+  guides       TourGuide[]
+  itinerary    TourDay[]
+  prices       TourPrice[]
+  images       TourImage[]
+  inclusions   TourInclusion[]
+  tourBookings BookingTour[]
+  reviews      Review[]
+}
+
+model TourDay {
+  id            String  @id @default(cuid())
+  tourId        String
+  tour          Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  dayNumber     Int
+  titleEs       String
+  titleEn       String
+  descEs        String? @db.Text
+  descEn        String? @db.Text
+  accommodation String? @db.Text
+  meals         String? // "B,L,D"
+
+  @@unique([tourId, dayNumber])
+}
+
+// paxMin/paxMax definen el rango de personas al que aplica el precio
+model TourPrice {
+  id       String  @id @default(cuid())
+  tourId   String
+  tour     Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  seasonId String?
+  season   Season? @relation(fields: [seasonId], references: [id])
+  paxMin   Int     @default(1)
+  paxMax   Int?
+  price    Float
+  currency String  @default("USD")
+
+  @@unique([tourId, seasonId, paxMin])
+}
+
+model TourImage {
+  id        String  @id @default(cuid())
+  tourId    String
+  tour      Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  url       String  @db.Text
+  altEs     String? @db.Text
+  altEn     String? @db.Text
+  sortOrder Int     @default(0)
+}
+
+// included: true = incluido | false = no incluido
+model TourInclusion {
+  id        String  @id @default(cuid())
+  tourId    String
+  tour      Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  textEs    String  @db.Text
+  textEn    String  @db.Text
+  included  Boolean @default(true)
+  sortOrder Int     @default(0)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RELACIONES MUCHOS-A-MUCHOS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model TourDestination {
+  tourId        String
+  tour          Tour        @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@id([tourId, destinationId])
+}
+
+model TourGuide {
+  tourId  String
+  tour    Tour   @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  guideId String
+  guide   Guide  @relation(fields: [guideId], references: [id], onDelete: Cascade)
+
+  @@id([tourId, guideId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GUÍAS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Guide {
+  id          String   @id @default(cuid())
+  name        String
+  baseEs      String
+  baseEn      String
+  years       Int
+  langs       String // "ES,EN,QU"
+  specEs      String
+  specEn      String
+  bioEs       String   @db.Text
+  bioEn       String   @db.Text
+  img         String   @db.Text
+  licenseNo   String?
+  phone       String?
+  email       String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String?
+  createdBy   User?    @relation("GuideCreator", fields: [createdById], references: [id])
+
+  tours        TourGuide[]
+  tourBookings BookingTour[]
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RESERVAS
+// status: "PENDING" | "CONFIRMED" | "PAID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "REFUNDED"
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Booking {
+  id              String   @id @default(cuid())
+  reference       String   @unique // formato: AE-2025-001234
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  status          String   @default("PENDING")
+  totalAmount     Float
+  currency        String   @default("USD")
+  pax             Int
+  startDate       DateTime
+  endDate         DateTime
+  specialRequests String?  @db.Text
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tourBookings  BookingTour[]
+  hotelBookings BookingHotel[]
+  payments      Payment[]
+}
+
+model BookingTour {
+  id          String   @id @default(cuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  tourId      String
+  tour        Tour     @relation(fields: [tourId], references: [id])
+  guideId     String?
+  guide       Guide?   @relation(fields: [guideId], references: [id])
+  startDate   DateTime
+  pax         Int
+  pricePerPax Float
+  totalPrice  Float
+  notes       String?  @db.Text
+}
+
+model BookingHotel {
+  id            String   @id @default(cuid())
+  bookingId     String
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  hotelId       String
+  hotel         Hotel    @relation(fields: [hotelId], references: [id])
+  roomId        String?
+  room          Room?    @relation(fields: [roomId], references: [id])
+  checkIn       DateTime
+  checkOut      DateTime
+  nights        Int
+  guests        Int
+  pricePerNight Float
+  totalPrice    Float
+  notes         String?  @db.Text
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PAGOS
+// method: "CREDIT_CARD" | "DEBIT_CARD" | "BANK_TRANSFER" | "PAYPAL" | "CASH"
+// status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED"
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Payment {
+  id            String    @id @default(cuid())
+  bookingId     String
+  booking       Booking   @relation(fields: [bookingId], references: [id])
+  amount        Float
+  currency      String    @default("USD")
+  method        String
+  status        String    @default("PENDING")
+  transactionId String?
+  paidAt        DateTime?
+  notes         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RESEÑAS
+// Una reseña pertenece a destino, tour O hotel (solo uno a la vez)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Review {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  rating        Int
+  comment       String?      @db.Text
+  published     Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+  tourId        String?
+  tour          Tour?        @relation(fields: [tourId], references: [id])
+  hotelId       String?
+  hotel         Hotel?       @relation(fields: [hotelId], references: [id])
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String   @db.Text
+  titleEs   String
+  titleEn   String
+  captionEs String?  @db.Text
+  captionEn String?  @db.Text
+  category  String   @default("naturaleza")
+  sortOrder Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
