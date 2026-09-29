@@ -55,7 +55,7 @@ export default function DestinosPage({ lang }: DestinosPageProps) {
         title={tr.destinosHero}
         lead={tr.destinosLead}
         accent={ACCENT}
-        bg="https://mistertravel.news/wp-content/uploads/2025/01/Canopy-ou-zipline-Paradise-Ecolodge-Madre-de-Dios.-Luis-Francisco-Gonzales-%C2%A9PROMPERU.jpg"
+        bg="/images/canopy.webp"
       />
 
       <div className="filter-bar">

@@ -38,7 +38,7 @@ export default function GaleriaPage({ lang }: { lang: Lang }) {
           ? 'Fotografias del rio, el bosque, la fauna y las actividades alrededor del lodge.'
           : 'Photographs of the river, forest, wildlife, and activities around the lodge.'}
         accent={ACCENT}
-        bg="/uploads/1778347444962-3lozdulfu64.jpg"
+        bg="/images/lago-sandoval.webp"
       />
 
       <section className="gallery-grid-wrap">

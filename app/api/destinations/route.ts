@@ -16,8 +16,8 @@ export async function GET() {
       sub:    { es: d.subEs,    en: d.subEn },
       desc:        { es: d.descEs,   en: d.descEn },
       img:         d.coverImg,
-      imgLight:    d.slug === 'lodge-madre-de-dios' ? '/uploads/lodgedia.jpg' : undefined,
-      imgDark:     d.slug === 'lodge-madre-de-dios' ? '/uploads/lodgenoche.jpg' : undefined,
+      imgLight:    d.slug === 'lodge-madre-de-dios' ? '/images/lodge-day.webp' : undefined,
+      imgDark:     d.slug === 'lodge-madre-de-dios' ? '/images/lodge-night.webp' : undefined,
       tag:         d.tag,
       altitudeM:   d.altitudeM ?? null,
     }))

@@ -97,7 +97,7 @@ export default function LoginPage({ lang }: LoginPageProps) {
           className={s.panelBg}
           style={{
             backgroundImage:
-              'url(/uploads/1778347444962-3lozdulfu64.jpg)',
+              'url(/images/lago-sandoval.webp)',
           }}
         />
         <div className={s.panelOverlay} />

@@ -29,7 +29,7 @@ export default function GuiasPage({ lang }: GuiasPageProps) {
         title={tr.guiasHero}
         lead={tr.guiasLead}
         accent={ACCENT}
-        bg="https://images.unsplash.com/photo-1531065208531-4036c0dba3ca?w=1920&q=80&auto=format&fit=crop"
+        bg="/images/lodge-day.webp"
       />
 
       <div className="guias-stats">

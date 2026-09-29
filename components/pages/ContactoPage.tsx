@@ -34,7 +34,7 @@ export default function ContactoPage({ lang }: ContactoPageProps) {
         title={tr.contactoHero}
         lead={tr.contactoLead}
         accent={ACCENT}
-        bg="/uploads/1778347444962-3lozdulfu64.jpg"
+        bg="/images/lago-sandoval.webp"
       />
 
       <div className="contacto-layout">

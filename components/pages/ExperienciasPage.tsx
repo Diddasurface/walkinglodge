@@ -51,7 +51,7 @@ export default function ExperienciasPage({ lang }: ExperienciasPageProps) {
         title={tr.expHero}
         lead={tr.expLead}
         accent={ACCENT}
-        bg="/uploads/1778347444962-3lozdulfu64.jpg"
+        bg="/images/lago-sandoval.webp"
       />
 
       <div className="filter-bar">

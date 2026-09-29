@@ -17,7 +17,7 @@ export default function CTA({ lang }: CTAProps) {
         className="cta-bg"
         style={{
           backgroundImage:
-            'url(/uploads/1778347444962-3lozdulfu64.jpg)',
+            'url(/images/lago-sandoval.webp)',
         }}
       />
       <div className="cta-shade" />

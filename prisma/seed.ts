@@ -4,16 +4,14 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 const IMG = {
-  river: '/uploads/1778347444962-3lozdulfu64.jpg',
-  routeBoat1: '/uploads/rutabote1.jpg',
-  routeBoat2: '/uploads/rutabote2.jpg',
-  lodgeDay: '/uploads/lodgedia.jpg',
-  lodgeNight: '/uploads/lodgenoche.jpg',
-  canopy: 'https://mistertravel.news/wp-content/uploads/2025/01/Canopy-ou-zipline-Paradise-Ecolodge-Madre-de-Dios.-Luis-Francisco-Gonzales-%C2%A9PROMPERU.jpg',
-  macaws: 'https://www.ytuqueplanes.com/imagenes/fotos/novedades/interna-Madre-de-Dios2.jpg',
-  walkway: 'https://assets.howlanders.com/en/tours-peru/puerto-maldonado/puerto-maldonado-tambopata-national-reserve-4-days/timeline/canopy-walk-way.jpg',
-  nightWalk: 'https://cdn.getyourguide.com/image/format%3Dauto%2Cfit%3Dcrop%2Cgravity%3Dauto%2Cquality%3D60%2Cwidth%3D900%2Cheight%3D900%2Cdpr%3D1/tour_img/50e5a5d1de70d6ad548619d0118af26869bdba4c15640f6bffa917019be51216.jpg',
-  jungle: 'https://images.unsplash.com/photo-1518182170546-07661fd94144?w=1920&q=80&auto=format&fit=crop',
+  river: '/images/lago-sandoval.webp',
+  routeBoat1: '/images/route-boat-1.webp',
+  routeBoat2: '/images/route-boat-2.webp',
+  lodgeDay: '/images/lodge-day.webp',
+  lodgeNight: '/images/lodge-night.webp',
+  canopy: '/images/canopy.webp',
+  macaws: '/images/macaws.webp',
+  nightWalk: '/images/night-walk.webp',
 }
 
 const destinationsData = [
