@@ -20,8 +20,8 @@ export function ImageUpload({ value, onChange, lang = 'es' }: ImageUploadProps) 
       setError(lang === 'es' ? 'Solo se permiten imágenes' : 'Only images are allowed')
       return
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setError(lang === 'es' ? 'Máximo 5 MB por imagen' : 'Max 5 MB per image')
+    if (file.size > 8 * 1024 * 1024) {
+      setError(lang === 'es' ? 'Máximo 8 MB por imagen' : 'Max 8 MB per image')
       return
     }
     setError('')
@@ -99,7 +99,7 @@ export function ImageUpload({ value, onChange, lang = 'es' }: ImageUploadProps) 
                     </span>
                   </p>
                   <p className="text-[10px] text-gray-400 dark:text-zinc-600 mt-0.5">
-                    JPG, PNG, WEBP, SVG · {lang === 'es' ? 'máx. 5 MB' : 'max 5 MB'}
+                    JPG, PNG, WEBP, GIF, SVG · {lang === 'es' ? 'máx. 8 MB' : 'max 8 MB'}
                   </p>
                 </div>
               </>
@@ -131,7 +131,7 @@ export function ImageUpload({ value, onChange, lang = 'es' }: ImageUploadProps) 
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
         className="hidden"
         onChange={e => { const f = e.target.files?.[0]; if (f) { e.target.value = ''; upload(f) } }}
       />

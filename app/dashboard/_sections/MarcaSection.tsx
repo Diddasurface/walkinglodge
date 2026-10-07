@@ -95,8 +95,8 @@ export function MarcaSection({ lang, settings, loading, onRefresh }: {
               <img src={logoUrl} alt="Logo" className="max-h-16 max-w-full object-contain" />
             ) : (
               <div className="flex items-center gap-3 text-white">
-                <span className="w-9 h-9 rounded-full border border-white/80 flex items-center justify-center text-xs">AE</span>
-                <span className="font-semibold tracking-[0.22em] text-sm">AMAZON</span>
+                <span className="w-9 h-9 rounded-full border border-white/80 flex items-center justify-center text-xs">WL</span>
+                <span className="font-semibold tracking-[0.22em] text-sm">WALKING LODGE</span>
               </div>
             )}
           </div>

@@ -7,7 +7,9 @@ export interface Stats {
 }
 export interface AdminTour {
   id: string; slug: string; type: string; titleEs: string; titleEn: string
-  durationDays: number; durationNights: number; levelEs: string
+  subEs: string | null; subEn: string | null
+  durationDays: number; durationNights: number; levelEs: string; levelEn: string
+  minPax: number; maxPax: number; basePrice: number | null
   coverImg: string; published: boolean; featured: boolean; createdAt: string
 }
 export interface AdminGuide {

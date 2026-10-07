@@ -7,8 +7,20 @@ export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
-  const tours = await prisma.tour.findMany({ orderBy: { createdAt: 'desc' } })
-  return NextResponse.json(tours)
+  const tours = await prisma.tour.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      prices: {
+        where: { seasonId: null },
+        orderBy: { paxMin: 'asc' },
+        take: 1,
+      },
+    },
+  })
+  return NextResponse.json(tours.map(({ prices, ...tour }) => ({
+    ...tour,
+    basePrice: prices[0]?.price ?? null,
+  })))
 }
 
 export async function POST(req: NextRequest) {

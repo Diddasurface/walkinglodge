@@ -179,10 +179,10 @@ export function GuiasSection({ lang, guides, loading, onRefresh }: {
                         </button>
                       </td>
                       <td className="px-5 py-4">
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                        <div className="flex items-center gap-1.5">
                           <button
                             onClick={() => openEdit(g)}
-                            className="text-gray-400 dark:text-zinc-600 hover:text-[#E5A547] dark:hover:text-[#E5A547] transition-colors"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-md text-black dark:text-zinc-200 hover:bg-[#E5A547]/20 hover:text-[#9a650f] dark:hover:text-[#E5A547] transition-colors"
                             title={lang === 'es' ? 'Editar' : 'Edit'}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -192,7 +192,7 @@ export function GuiasSection({ lang, guides, loading, onRefresh }: {
                           </button>
                           <button
                             onClick={() => deleteGuide(g)}
-                            className="text-gray-400 dark:text-zinc-600 hover:text-red-600 dark:hover:text-red-400 transition-colors text-sm"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-md text-black dark:text-zinc-200 hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-colors text-base"
                             title={lang === 'es' ? 'Eliminar' : 'Delete'}
                           >✕</button>
                         </div>

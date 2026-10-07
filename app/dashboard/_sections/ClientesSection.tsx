@@ -142,7 +142,7 @@ export function ClientesSection({ lang, clients, loading, onRefresh }: {
                       <td className="px-5 py-4">
                         <button
                           onClick={() => deleteClient(c)}
-                          className="opacity-0 group-hover:opacity-100 text-gray-400 dark:text-zinc-600 hover:text-red-600 dark:hover:text-red-400 transition-all text-sm"
+                          className="w-8 h-8 inline-flex items-center justify-center rounded-md text-black dark:text-zinc-200 hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-colors text-base"
                         >✕</button>
                       </td>
                     </tr>
