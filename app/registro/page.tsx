@@ -71,7 +71,7 @@ export default function RegistroPage() {
     }
 
     await signIn('credentials', { email: form.email, password: form.password, redirect: false })
-    router.push('/dashboard')
+    router.push('/')
   }
 
   return (

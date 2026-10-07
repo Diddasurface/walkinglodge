@@ -82,7 +82,10 @@ export default function LoginPage({ lang }: LoginPageProps) {
     setLoading(false)
     if (res?.ok) {
       setSuccess(true)
-      setTimeout(() => router.push('/dashboard'), 1200)
+      const sessionRes = await fetch('/api/auth/session')
+      const session = await sessionRes.json().catch(() => null)
+      const destination = session?.user?.role === 'ADMIN' ? '/dashboard' : '/'
+      setTimeout(() => router.push(destination), 1200)
     } else {
       setError(lang === 'es' ? 'Correo o contraseña incorrectos.' : 'Incorrect email or password.')
     }

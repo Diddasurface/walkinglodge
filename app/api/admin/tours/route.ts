@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { getAdminSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
-  const session = await getServerSession(authOptions)
+  const session = await getAdminSession()
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
   const tours = await prisma.tour.findMany({
@@ -24,7 +23,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getAdminSession()
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
   const body = await req.json()
