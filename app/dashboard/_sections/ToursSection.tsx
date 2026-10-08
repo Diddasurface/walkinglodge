@@ -40,6 +40,7 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
   const [saving, setSaving] = useState(false)
   const [editing, setEditing] = useState<AdminTour | null>(null)
   const [f, setF] = useState(EMPTY_FORM)
+  const [favoriteFeedback, setFavoriteFeedback] = useState('')
 
   const upd = (k: keyof typeof f) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
@@ -106,6 +107,20 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
     onRefresh()
   }
 
+  const toggleFeatured = async (t: AdminTour) => {
+    setFavoriteFeedback('')
+    const res = await fetch(`/api/admin/tours/${t.id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ featured: !t.featured }),
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      setFavoriteFeedback(data.error || (lang === 'es' ? 'No se pudo actualizar Inicio' : 'Could not update Home'))
+      return
+    }
+    onRefresh()
+  }
+
   const deleteTour = async (t: AdminTour) => {
     if (!confirm(lang === 'es' ? `¿Eliminar "${t.titleEs}"?` : `Delete "${t.titleEs}"?`)) return
     await fetch(`/api/admin/tours/${t.id}`, { method: 'DELETE' })
@@ -115,6 +130,7 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
   const filtered = tours.filter(t =>
     t.titleEs.toLowerCase().includes(search.toLowerCase())
   )
+  const featuredCount = tours.filter(t => t.featured).length
 
   const searchCls =
     'bg-white dark:bg-[#1c1f21] border border-slate-200 dark:border-white/[0.08] rounded-lg px-3 py-1.5 ' +
@@ -127,6 +143,9 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
         title={`${lang === 'es' ? 'Todos los tours' : 'All tours'} (${tours.length})`}
         action={
           <div className="flex items-center gap-3">
+            <span className="hidden sm:inline text-[11px] font-medium text-gray-500 dark:text-zinc-400 whitespace-nowrap">
+              {lang === 'es' ? 'Inicio' : 'Home'}: {featuredCount}/3
+            </span>
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -143,6 +162,11 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
           </div>
         }
       >
+        {favoriteFeedback && (
+          <div className="px-5 pt-4">
+            <Feedback ok="" err={favoriteFeedback} />
+          </div>
+        )}
         {loading ? <Spinner /> : filtered.length === 0
           ? <EmptyState label={lang === 'es' ? 'Sin tours' : 'No tours'} />
           : (
@@ -150,7 +174,7 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
               <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="bg-slate-50 dark:bg-[#0f1012]">
-                    {[lang === 'es' ? 'Título' : 'Title', lang === 'es' ? 'Tipo' : 'Type', lang === 'es' ? 'Días' : 'Days', lang === 'es' ? 'Nivel' : 'Level', 'Estado', ''].map(h => (
+                    {[lang === 'es' ? 'Título' : 'Title', lang === 'es' ? 'Tipo' : 'Type', lang === 'es' ? 'Días' : 'Days', lang === 'es' ? 'Precio' : 'Price', lang === 'es' ? 'Nivel' : 'Level', 'Estado', ''].map(h => (
                       <th key={h} className="px-5 py-3 text-left text-[10px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -175,6 +199,9 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
                         <td className="px-5 py-4 text-sm text-gray-500 dark:text-zinc-400 whitespace-nowrap">
                           {t.durationDays ?? '—'} {lang === 'es' ? 'días' : 'days'} / {t.durationNights ?? 0} {lang === 'es' ? 'noches' : 'nights'}
                         </td>
+                        <td className="px-5 py-4 text-sm font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                          {t.basePrice === null ? '—' : `USD ${t.basePrice}`}
+                        </td>
                         <td className="px-5 py-4 text-sm text-gray-500 dark:text-zinc-400">{t.levelEs}</td>
                         <td className="px-5 py-4">
                           <button
@@ -195,6 +222,29 @@ export function ToursSection({ lang, tours, loading, onRefresh }: {
                               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={e => { e.stopPropagation(); toggleFeatured(t) }}
+                              disabled={!t.published || (!t.featured && featuredCount >= 3)}
+                              className={`w-8 h-8 inline-flex items-center justify-center rounded-md transition-colors disabled:cursor-not-allowed disabled:opacity-30 ${
+                                t.featured
+                                  ? 'text-[#E5A547] bg-[#E5A547]/15 hover:bg-[#E5A547]/25'
+                                  : 'text-black dark:text-zinc-200 hover:bg-[#E5A547]/20 hover:text-[#9a650f] dark:hover:text-[#E5A547]'
+                              }`}
+                              title={t.featured
+                                ? (lang === 'es' ? 'Quitar de Inicio' : 'Remove from Home')
+                                : !t.published
+                                  ? (lang === 'es' ? 'Publica el tour antes de mostrarlo en Inicio' : 'Publish the tour before showing it on Home')
+                                : featuredCount >= 3
+                                  ? (lang === 'es' ? 'Quita primero otro destacado; el máximo es 3' : 'Remove another featured tour first; maximum is 3')
+                                  : (lang === 'es' ? 'Mostrar en Inicio' : 'Show on Home')}
+                              aria-label={t.featured
+                                ? (lang === 'es' ? `Quitar ${t.titleEs} de Inicio` : `Remove ${t.titleEs} from Home`)
+                                : (lang === 'es' ? `Mostrar ${t.titleEs} en Inicio` : `Show ${t.titleEs} on Home`)}
+                            >
+                              <svg className="w-4 h-4" viewBox="0 0 24 24" fill={t.featured ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                               </svg>
                             </button>
                             <button

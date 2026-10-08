@@ -36,9 +36,7 @@ function SkeletonCard() {
 export default function Experiences({ lang, tours, loading }: ExperiencesProps) {
   const tr = T[lang]
 
-  // Prefer featured tours; fall back to first 3
-  const featured = tours.filter(t => (t as any).featured)
-  const items = (featured.length >= 3 ? featured : tours).slice(0, 3)
+  const items = tours.filter(t => t.featured).slice(0, 3)
 
   return (
     <section className="experiences" id="experiences">
@@ -59,7 +57,7 @@ export default function Experiences({ lang, tours, loading }: ExperiencesProps) 
         {loading
           ? [0, 1, 2].map(i => <SkeletonCard key={i} />)
           : items.map((t, i) => {
-              const typeKey = String((t as any).type ?? '').toUpperCase()
+              const typeKey = t.type
               const tag = (TYPE_LABEL[typeKey] ?? TYPE_LABEL.ADV)[lang]
               const price = t.price ? `USD ${t.price}` : '—'
 

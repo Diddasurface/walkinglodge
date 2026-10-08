@@ -32,6 +32,29 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'La duración debe ser de al menos un día' }, { status: 400 })
   }
 
+  if (body.published === false) data.featured = false
+
+  if (body.featured === true) {
+    const currentTour = await prisma.tour.findUnique({
+      where: { id },
+      select: { published: true },
+    })
+    const willBePublished = body.published === undefined
+      ? currentTour?.published
+      : Boolean(body.published)
+
+    if (!willBePublished) {
+      return NextResponse.json({ error: 'Publica el tour antes de mostrarlo en Inicio' }, { status: 400 })
+    }
+
+    const featuredCount = await prisma.tour.count({
+      where: { featured: true, id: { not: id } },
+    })
+    if (featuredCount >= 3) {
+      return NextResponse.json({ error: 'Inicio admite un máximo de 3 tours destacados' }, { status: 409 })
+    }
+  }
+
   const tour = await prisma.$transaction(async (tx) => {
     const updated = await tx.tour.update({ where: { id }, data })
 

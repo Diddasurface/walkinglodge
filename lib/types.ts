@@ -20,13 +20,14 @@ export interface Destination {
 
 export interface Tour {
   id: number
-  type: 'adv' | 'nat' | 'cul' | 'lux'
+  type: 'ADV' | 'NAT' | 'CUL' | 'LUX' | 'FAM'
   title: BilingualString
   sub: BilingualString
   days: BilingualString
   price: string
   level: BilingualString
   img: string
+  featured: boolean
 }
 
 export interface Guide {
