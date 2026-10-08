@@ -57,8 +57,13 @@ export interface AdminHotel {
 export interface AdminBooking {
   id: string; reference: string
   clientName: string; clientEmail: string
-  status: string; totalAmount: number; currency: string
-  pax: number; startDate: string; endDate: string; createdAt: string
+  source: 'CONTACT' | 'DASHBOARD'
+  status: string; totalAmount: number | null; currency: string
+  pax: number; startDate: string | null; endDate: string | null
+  contactPhone: string | null; nationality: string | null
+  destinationInterest: string | null; requestedDates: string | null
+  message: string | null; specialRequests: string | null
+  createdAt: string; updatedAt: string
 }
 export interface AdminClient {
   id: string; name: string; email: string; phone: string | null

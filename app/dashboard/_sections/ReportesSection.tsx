@@ -5,6 +5,9 @@ import { Badge } from '../_ui/Badge'
 import type { ReportData } from '../_lib/types'
 
 const STATUS_LABELS: Record<string, { es: string; en: string; cls: string }> = {
+  NEW:         { es: 'Nuevo',       en: 'New',         cls: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400' },
+  CONTACTED:   { es: 'Contactado',  en: 'Contacted',   cls: 'bg-sky-500/15 text-sky-700 dark:text-sky-400' },
+  QUOTED:      { es: 'Cotizado',    en: 'Quoted',      cls: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400' },
   PENDING:     { es: 'Pendiente',   en: 'Pending',     cls: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-400' },
   CONFIRMED:   { es: 'Confirmado',  en: 'Confirmed',   cls: 'bg-blue-500/15   text-blue-700   dark:text-blue-400' },
   PAID:        { es: 'Pagado',      en: 'Paid',        cls: 'bg-green-500/15  text-green-700  dark:text-green-400' },

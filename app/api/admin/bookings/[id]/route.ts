@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAdminSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+const VALID_STATUSES = new Set([
+  'NEW', 'CONTACTED', 'QUOTED', 'PENDING', 'CONFIRMED', 'PAID',
+  'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'REFUNDED',
+])
+
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getAdminSession()
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
@@ -9,7 +14,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { id } = await params
   const body = await req.json()
 
-  const booking = await prisma.booking.update({ where: { id }, data: body })
+  if (typeof body.status !== 'string' || !VALID_STATUSES.has(body.status)) {
+    return NextResponse.json({ error: 'Estado no valido' }, { status: 400 })
+  }
+
+  const booking = await prisma.booking.update({ where: { id }, data: { status: body.status } })
   return NextResponse.json(booking)
 }
 

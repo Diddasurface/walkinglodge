@@ -14,17 +14,17 @@ datasource db {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("CLIENT")
-  phone     String?
-  avatarUrl String?  @db.Text
-  isActive  Boolean  @default(true)
-  sessionVersion Int @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  email          String   @unique
+  password       String
+  role           String   @default("CLIENT")
+  phone          String?
+  avatarUrl      String?  @db.Text
+  isActive       Boolean  @default(true)
+  sessionVersion Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   clientProfile       ClientProfile?
   bookings            Booking[]
@@ -397,20 +397,28 @@ model Guide {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Booking {
-  id              String   @id @default(cuid())
-  reference       String   @unique // formato: AE-2025-001234
-  userId          String
-  user            User     @relation(fields: [userId], references: [id])
-  status          String   @default("PENDING")
-  totalAmount     Float
-  currency        String   @default("USD")
-  pax             Int
-  startDate       DateTime
-  endDate         DateTime
-  specialRequests String?  @db.Text
-  notes           String?  @db.Text
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  reference           String    @unique
+  userId              String?
+  user                User?     @relation(fields: [userId], references: [id])
+  source              String    @default("DASHBOARD")
+  status              String    @default("PENDING")
+  totalAmount         Float?
+  currency            String    @default("USD")
+  pax                 Int
+  startDate           DateTime?
+  endDate             DateTime?
+  specialRequests     String?   @db.Text
+  notes               String?   @db.Text
+  contactName         String?
+  contactEmail        String?
+  contactPhone        String?
+  nationality         String?
+  destinationInterest String?
+  requestedDates      String?
+  message             String?   @db.Text
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
   tourBookings  BookingTour[]
   hotelBookings BookingHotel[]

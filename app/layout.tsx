@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Oswald, Inter } from 'next/font/google'
 import './globals.css'
+import 'react-day-picker/style.css'
 import LangProvider from '@/components/LangProvider'
 import SessionProvider from '@/components/providers/SessionProvider'
 import {

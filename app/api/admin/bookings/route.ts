@@ -7,15 +7,16 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
   const rows = await prisma.booking.findMany({
-    include: { user: { select: { name: true, email: true } } },
+    include: { user: { select: { name: true, email: true, phone: true } } },
     orderBy: { createdAt: 'desc' },
   })
 
   return NextResponse.json(rows.map(b => ({
     id: b.id,
     reference: b.reference,
-    clientName: b.user.name,
-    clientEmail: b.user.email,
+    clientName: b.user?.name ?? b.contactName ?? 'Sin nombre',
+    clientEmail: b.user?.email ?? b.contactEmail ?? '',
+    source: b.source,
     status: b.status,
     totalAmount: b.totalAmount,
     currency: b.currency,
@@ -23,7 +24,13 @@ export async function GET() {
     startDate: b.startDate,
     endDate: b.endDate,
     specialRequests: b.specialRequests,
+    contactPhone: b.contactPhone ?? b.user?.phone ?? null,
+    nationality: b.nationality,
+    destinationInterest: b.destinationInterest,
+    requestedDates: b.requestedDates,
+    message: b.message,
     createdAt: b.createdAt,
+    updatedAt: b.updatedAt,
   })))
 }
 
@@ -39,12 +46,13 @@ export async function POST(req: NextRequest) {
   }
 
   const year = new Date().getFullYear()
-  const reference = `AE-${year}-${String(Math.floor(Math.random() * 999999)).padStart(6, '0')}`
+  const reference = `WL-${year}-${String(Math.floor(Math.random() * 999999)).padStart(6, '0')}`
 
   const booking = await prisma.booking.create({
     data: {
       reference,
       userId,
+      source: 'DASHBOARD',
       status: 'PENDING',
       totalAmount: Number(totalAmount),
       currency: 'USD',
