@@ -66,9 +66,8 @@ html, body {
 }
 .brand-logo {
   display: block;
-  width: auto;
-  max-width: 170px;
-  height: 38px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
 }
 .brand-mark { display: flex; opacity: 0.95; }
@@ -705,6 +704,12 @@ html, body {
   font-size: 15px;
   letter-spacing: 0.14em;
   color: var(--ink-0);
+}
+.footer-logo {
+  width: 52px;
+  height: 52px;
+  flex: none;
+  object-fit: contain;
 }
 .footer-cols {
   display: flex; gap: 36px;

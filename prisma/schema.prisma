@@ -2,7 +2,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// SQLite ahora · cambiar provider + DATABASE_URL para MySQL o PostgreSQL
+// Base de datos principal de Walking Lodge.
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")

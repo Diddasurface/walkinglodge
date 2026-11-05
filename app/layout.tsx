@@ -10,6 +10,7 @@ import {
   SITE_NAME,
   SITE_URL,
 } from '@/lib/seo'
+import { DEFAULT_LOGO_URL, SITE_CONTACT } from '@/lib/site'
 
 const oswald = Oswald({
   subsets: ['latin'],
@@ -65,7 +66,11 @@ const structuredData = [
     '@context': 'https://schema.org',
     '@type': 'Hotel',
     name: SITE_NAME,
+    legalName: SITE_CONTACT.legalName,
     url: SITE_URL,
+    logo: `${SITE_URL}${DEFAULT_LOGO_URL}`,
+    email: SITE_CONTACT.email,
+    telephone: SITE_CONTACT.phones.map((phone) => phone.href.replace('tel:', '')),
     description: DEFAULT_DESCRIPTION,
     image: [
       `${SITE_URL}/images/lodge-day.webp`,

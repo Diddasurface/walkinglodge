@@ -9,6 +9,7 @@ import labelsEs from 'react-phone-number-input/locale/es.json'
 import PageHero from '@/components/PageHero'
 import { PAGE_T } from '@/lib/i18n'
 import type { Lang } from '@/lib/types'
+import { SITE_CONTACT } from '@/lib/site'
 
 const ACCENT = '#E5A547'
 const DISPLAY_FONT = 'var(--font-oswald), Oswald, sans-serif'
@@ -334,6 +335,11 @@ export default function ContactoPage({ lang }: ContactoPageProps) {
           <h4 style={{ fontFamily: DISPLAY_FONT }}>{tr.contactInfoTitle}</h4>
 
           <div className="info-block">
+            <p className="info-label">{lang === 'es' ? 'Razón social' : 'Legal name'}</p>
+            <p>{SITE_CONTACT.legalName}</p>
+          </div>
+
+          <div className="info-block">
             <p className="info-label">{tr.addrTitle}</p>
             <p>Puerto Maldonado, Madre de Dios</p>
             <p>Lodge a 2 horas rio abajo por el Madre de Dios</p>
@@ -342,8 +348,10 @@ export default function ContactoPage({ lang }: ContactoPageProps) {
 
           <div className="info-block">
             <p className="info-label">{tr.bookingTitle}</p>
-            <a href="mailto:reservas@walkinglodge.com">reservas@walkinglodge.com</a>
-            <a href="tel:+5184234567">+51 84 234 567</a>
+            <a href={`mailto:${SITE_CONTACT.email}`}>{SITE_CONTACT.email}</a>
+            {SITE_CONTACT.phones.map((phone) => (
+              <a key={phone.href} href={phone.href}>{phone.label}</a>
+            ))}
           </div>
 
           <div className="info-block">
@@ -351,10 +359,6 @@ export default function ContactoPage({ lang }: ContactoPageProps) {
             <p>{tr.hoursVal}</p>
           </div>
 
-          <div className="info-block">
-            <p className="info-label">{tr.pressTitle}</p>
-            <a href="mailto:prensa@walkinglodge.com">prensa@walkinglodge.com</a>
-          </div>
         </aside>
       </div>
     </div>

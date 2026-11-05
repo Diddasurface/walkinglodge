@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAdminSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { DEFAULT_LOGO_URL } from '@/lib/site'
 
 export async function GET() {
   const session = await getAdminSession()
@@ -12,7 +13,7 @@ export async function GET() {
 
   const settings = Object.fromEntries(rows.map((row) => [row.key, row.value]))
   return NextResponse.json({
-    logoUrl: settings.logoUrl ?? '',
+    logoUrl: settings.logoUrl || DEFAULT_LOGO_URL,
   })
 }
 

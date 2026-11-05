@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { T } from '@/lib/i18n'
 import type { Lang } from '@/lib/types'
-
-const ACCENT = '#E5A547'
+import { DEFAULT_LOGO_URL, SITE_CONTACT } from '@/lib/site'
 
 interface FooterProps {
   lang: Lang
@@ -23,16 +22,8 @@ export default function Footer({ lang }: FooterProps) {
     <footer className="footer">
       <div className="footer-top">
         <div className="footer-brand">
-          <span style={{ color: ACCENT }}>
-            <svg viewBox="0 0 32 32" width="22" height="22">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="1.4" />
-              <path
-                d="M2 16 H30 M16 2 Q22 16 16 30 Q10 16 16 2 M4 9 H28 M4 23 H28"
-                fill="none" stroke="currentColor" strokeWidth="1"
-              />
-            </svg>
-          </span>
-          <span>WALKING LODGE</span>
+          <img src={DEFAULT_LOGO_URL} alt="" className="footer-logo" />
+          <span>{SITE_CONTACT.legalName.toUpperCase()}</span>
         </div>
         <div className="footer-cols">
           {cols.map((c) => (
@@ -41,9 +32,9 @@ export default function Footer({ lang }: FooterProps) {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 Walking Lodge</span>
+        <span>© 2026 {SITE_CONTACT.legalName}</span>
         <span>{tr.footerCopy}</span>
-        <span>MADRE DE DIOS · TAMBOPATA · TAMBOPATA</span>
+        <span>MADRE DE DIOS · PUERTO MALDONADO · PERÚ</span>
       </div>
     </footer>
   )

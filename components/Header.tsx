@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import type { Lang } from '@/lib/types'
 import { T } from '@/lib/i18n'
+import { DEFAULT_LOGO_URL, SITE_CONTACT } from '@/lib/site'
 
 const ACCENT = '#E5A547'
 
@@ -28,7 +29,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
   const [scrolled, setScrolled]   = useState(false)
   const [menuOpen, setMenuOpen]   = useState(false)
   const [isLight,  setIsLight]    = useState(false)
-  const [logoUrl, setLogoUrl]     = useState('')
+  const [logoUrl, setLogoUrl]     = useState(DEFAULT_LOGO_URL)
   const { data: session } = useSession()
   const tr = T[lang]
 
@@ -58,8 +59,8 @@ export default function Header({ lang, setLang }: HeaderProps) {
   useEffect(() => {
     fetch('/api/settings')
       .then((r) => r.ok ? r.json() : null)
-      .then((data) => setLogoUrl(data?.logoUrl ?? ''))
-      .catch(() => setLogoUrl(''))
+      .then((data) => setLogoUrl(data?.logoUrl || DEFAULT_LOGO_URL))
+      .catch(() => setLogoUrl(DEFAULT_LOGO_URL))
   }, [])
 
   // Close menu on route change
@@ -79,7 +80,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
         <div className="header-inner">
           <Link href="/" className="brand">
             {logoUrl ? (
-              <img src={logoUrl} alt="Walking Lodge" className="brand-logo" />
+              <img src={logoUrl} alt={SITE_CONTACT.legalName} className="brand-logo" />
             ) : (
               <>
                 <span className="brand-mark" aria-hidden="true">
@@ -239,7 +240,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
               </svg>
             )}
           </button>
-          <p className="mobile-menu-copy">© 2026 Walking Lodge</p>
+          <p className="mobile-menu-copy">© 2026 {SITE_CONTACT.legalName}</p>
         </div>
       </div>
     </>
